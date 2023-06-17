@@ -1,0 +1,31 @@
+- name: Install nodejs
+  yum:
+    name: [nodejs, git]
+    
+- name: Download application from git
+  ansible.builtin.git:
+    repo: "https://{{ git_user }}:{{ git_password }}@gitlab.slurm.io/edu/xpaste_practicum.git"
+    dest: /etc/app
+    update: no
+
+- name: Install dependencies for ruby
+  shell: 
+    cmd: bundle config build.nokogiri --use-system-libraries
+
+- name: Install dependencies for application
+  shell: 
+    cmd: "bundle install --gemfile={{ app_dir }}/Gemfile --clean --no-cache --without development"
+  ignore_errors: true
+  
+- name: copy config
+  ansible.builtin.template: 
+    src: app.service.j2
+    dest: /etc/systemd/system/app.service
+
+    
+- name: start app service
+  systemd:
+    name: "app.service"
+    state: started
+    enabled: yes
+ 

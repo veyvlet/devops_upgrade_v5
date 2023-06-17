@@ -1,0 +1,9 @@
+---
+- name: init
+  hosts: localhost
+  
+  roles: 
+  - postgresql
+  - app 
+  - nginx
+  

@@ -1,0 +1,10 @@
+services:
+  test:
+    image: "local/centos-ruby"
+    ports: 
+      - 9040:80
+    volumes: 
+      - .:/etc/ansible      
+    command: bash -c "ansible-playbook /etc/ansible/playbooks/main.yml && tail -f /dev/null"
+
+
