@@ -1,0 +1,81 @@
+    - name: load vars
+      include_vars: 
+        file: vars/main.yaml
+        
+        
+    - name: "Install packages"
+      yum: 
+        name: [postgresql, postgresql-server, postgresql-libs, postgresql-devel]
+
+        
+    - name: Install psycopg2
+      yum:
+        name: "python-psycopg2"
+        state: present
+        enablerepo: "{{ postgresql_enablerepo | default(omit, true) }}"
+        
+
+    - name: "Find out if PostgreSQL is initialized"
+      ansible.builtin.stat:
+        path: "/var/lib/pgsql/data/pg_hba.conf"
+      register: postgres_data
+
+    - name: "Initialize PostgreSQL"
+      shell: "postgresql-setup initdb"
+      when: not postgres_data.stat.exists
+      
+    - name: "Start postgres"
+      systemd:
+        name: postgresql
+        state: started
+        enabled: true        
+
+     
+    - name: "Create app database"
+      postgresql_db:
+        state: present
+        name: "{{ db_name }}"
+      become: yes
+      become_user: postgres
+      
+    - name: "Create db user"
+      postgresql_user:
+        state: present
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+      become: yes
+      become_user: postgres
+
+    - name: "Grant db user access to app db"
+      postgresql_privs:
+        type: database
+        database: "{{ db_name }}"
+        roles: "{{ db_user }}"
+        grant_option: no
+        privs: all
+      become: yes
+      become_user: postgres
+
+    - name: "Allow md5 connection for the db user"
+      postgresql_pg_hba:
+        dest: "~/data/pg_hba.conf"
+        contype: host
+        databases: all
+        method: md5
+        users: "{{ db_user }}"
+        create: true
+      become: yes
+      become_user: postgres
+      notify: restart postgres
+      
+
+    - name: "Execute script from variable"
+      shell: "psql {{ db_name }} -c 'SELECT * FROM pg_catalog.pg_user'"
+      become: yes
+      become_user: postgres
+      register: sql_response_variable
+      
+    #- name: show responce
+    # debug: 
+    #    msg: "{{sql_response_variable}}"
+      

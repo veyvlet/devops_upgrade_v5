@@ -1,0 +1,27 @@
+- name:
+  shell:
+    cmd: ansible-galaxy install nginxinc.nginx
+    
+- name: Install nginx
+  include_role: 
+    name: nginxinc.nginx
+    tasks_from: opensource/install-distribution
+    
+
+- name: Replace backend
+  ansible.builtin.replace:
+     path: "{{ app_dir }}/config/nginx.conf"
+     regexp: "southbridge"
+     replace: "localhost"
+
+    
+- name: Copy nginx.conf
+  ansible.builtin.copy:
+     src: "{{ app_dir }}/config/nginx.conf"
+     dest: /etc/nginx/nginx.conf
+     
+- name: Start service
+  systemd:
+    name: nginx
+    state: started
+    enabled: true

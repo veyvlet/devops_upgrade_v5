@@ -1,0 +1,24 @@
+[Unit]
+Description=Custom application.
+
+[Service]
+Type=simple
+User=root
+Group=root
+Environment="SECRET_KEY_BASE=124354566"
+Environment="RAILS_ENV=production"
+Environment="RAILS_LOG_TO_STDOUT=1"
+Environment="DB_HOST=127.0.0.1"
+Environment="DB_PORT=5432"
+Environment="DB_NAME={{ db_name }}"
+Environment="DB_USER={{ db_user }}"
+Environment="DB_PASSWORD={{ db_password }}"
+WorkingDirectory={{ app_dir }}
+ExecStart=/bin/bash -c "/usr/local/bin/bundle exec rake db:migrate && /usr/local/bin/bundle exec puma -b unix:///var/run/puma.sock -e $RAILS_ENV config.ru"
+Restart=on-failure
+RestartSec=5s
+PrivateTmp=true
+
+
+[Install]
+WantedBy=multi-user.target
