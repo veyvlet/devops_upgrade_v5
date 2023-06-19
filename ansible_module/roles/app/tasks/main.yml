@@ -1,6 +1,6 @@
 - name: Install nodejs
   yum:
-    name: [nodejs, git]
+    name: [nodejs, git, libxslt-devel, libxml2-devel]
     
 - name: Download application from git
   ansible.builtin.git:
