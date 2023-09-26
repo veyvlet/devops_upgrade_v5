@@ -1,0 +1,8 @@
+---
+
+- name: Restart fluentbit service
+  ansible.builtin.systemd:
+    name: td-agent-bit
+    enabled: true
+    state: restarted
+  become: true

@@ -1,0 +1,11 @@
+---
+
+- name: Add yum repository for Centos 7
+  yum_repository:
+    name: TD_Agent_Bit
+    baseurl: http://packages.fluentbit.io/centos/7/$basearch/
+    gpgcheck: true
+    gpgkey: https://packages.fluentbit.io/fluentbit.key
+    description: Fluent bit repo
+    enabled: true
+
