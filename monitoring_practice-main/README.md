@@ -1,24 +1,18 @@
 # SLURM monitoring & logging practice
 
-This Ansible playbook installs Prometheus with node_exporter and EFK stack on Ubuntu 20.04:
+This Ansible playbook installs Prometheus with node_exporter and EFK stack on Centos 7:
 
     - prometheus
     - node_exporter
     - fluent_bit
-    - elasticsearch_and_kibana
+    - elasticsearch
 
 Default values and variables are located in ```defaults``` and ```vars``` directories of each role.
 
-To run this playbook make sure you have all neccessary requirements:
-```
-python -m pip install -r requirements.txt
-```
-
-Then start virtual machine with supplied Vagrantfile:
-
-```
-vagrant up
-```
+## To run this playbook you need docker and docker-compose installed. 
+docker build . -t local/centos  
+## Затем запустить docker-compose 
+docker-compose up  
 
 
 Finally run the playbook:
