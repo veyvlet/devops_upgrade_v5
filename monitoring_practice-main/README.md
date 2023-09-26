@@ -9,15 +9,8 @@ This Ansible playbook installs Prometheus with node_exporter and EFK stack on Ce
 
 Default values and variables are located in ```defaults``` and ```vars``` directories of each role.
 
-## To run this playbook you need docker and docker-compose installed. 
+## To run this playbook you need docker and docker-compose installed. To build image use
 docker build . -t local/centos  
-## Затем запустить docker-compose 
+## And now run docker-compose
 docker-compose up  
-
-
-Finally run the playbook:
-
-```
-ansible-playbook monitoring_practice.yml
-```
 
