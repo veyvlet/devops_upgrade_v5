@@ -1,4 +1,4 @@
-# slurm-tf-final-project
+# slurm-tf
 1. Необходимо передать в переменные окружения  yc-token и yc-folder-id
 - export YC_TOKEN
 - export YC_FOLDER_ID
